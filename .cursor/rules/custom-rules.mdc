@@ -1,0 +1,35 @@
+---
+description: Reglas principales para el desarrollo de Vectify, un SaaS de digitalización de manuscritos y dibujos con IA.
+globs:
+  - "**/*.ts"
+  - "**/*.tsx"
+alwaysApply: true
+---
+
+# 🔹 Contexto del proyecto
+- Nombre: **Vectify**
+- SaaS que permite digitalizar manuscritos, dibujos e ilustraciones usando IA.
+- Entrada de imágenes:
+  - Móvil → sacar foto con la cámara.
+  - PC → subir archivo (drag & drop o file picker).
+- Procesamiento:
+  - OCR con IA para escritura manuscrita.
+  - Vectorización/limpieza para dibujos.
+- Salida:
+  - Texto editable (.txt).
+  - Ilustraciones en .svg y .png transparente.
+
+# 🔹 Reglas de desarrollo
+- **Frontend:** Next.js 14 + TypeScript + TailwindCSS.
+- **Backend:** Node.js con API Routes (Next.js).
+- **DB y Auth:** Supabase (auth, storage, planes de usuario).
+- **Pagos:** Stripe (suscripciones).
+- **Procesamiento IA:** OpenAI Vision API / OCR + librerías de vectorización.
+- **UI/UX:** Minimalista, moderna, dark/light mode.
+
+# 🔹 Normas para el código
+- Todo en **TypeScript**.
+- Arquitectura modular y documentada.
+- Validar inputs y limitar tamaño de imágenes.
+- Hooks personalizados para cámara, uploads y API calls.
+- Comentarios claros en archivos clave.
