@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { useApp } from '@/components/providers'
-import { Sun, Moon, Monitor, User, Settings, LogOut } from 'lucide-react'
+import { Sun, Moon, User, Settings, LogOut } from 'lucide-react'
 import { useState } from 'react'
 
 export function DashboardHeader() {
@@ -11,21 +11,11 @@ export function DashboardHeader() {
   const [userMenuOpen, setUserMenuOpen] = useState(false)
 
   const toggleTheme = () => {
-    const themes: ('light' | 'dark' | 'system')[] = ['light', 'dark', 'system']
-    const currentIndex = themes.indexOf(theme)
-    const nextIndex = (currentIndex + 1) % themes.length
-    setTheme(themes[nextIndex])
+    setTheme(theme === 'light' ? 'dark' : 'light')
   }
 
   const getThemeIcon = () => {
-    switch (theme) {
-      case 'light':
-        return <Sun className="h-5 w-5" />
-      case 'dark':
-        return <Moon className="h-5 w-5" />
-      default:
-        return <Monitor className="h-5 w-5" />
-    }
+    return theme === 'light' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />
   }
 
   const handleSignOut = async () => {
