@@ -11,6 +11,11 @@ export const metadata: Metadata = {
   description: 'SaaS para digitalizar escrituras y dibujos mediante inteligencia artificial. OCR para texto manuscrito y vectorización para ilustraciones.',
   keywords: 'digitalización, OCR, vectorización, IA, manuscritos, dibujos',
   authors: [{ name: 'Vectify Team' }],
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
 }
 
 export const viewport: Viewport = {

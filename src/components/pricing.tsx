@@ -87,7 +87,7 @@ export function Pricing() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
-            <div key={index} className={`relative p-8 rounded-2xl border-2 transition-all duration-300 hover:shadow-xl ${
+            <div key={index} className={`relative p-8 rounded-2xl border-2 transition-all duration-300 hover:shadow-xl flex flex-col ${
               plan.popular 
                 ? 'border-primary-500 bg-primary-50/50 dark:bg-primary-950/50' 
                 : 'border-gray-200 dark:border-gray-700 bg-card'
@@ -109,7 +109,7 @@ export function Pricing() {
                 <p className="text-muted-foreground">{plan.description}</p>
               </div>
 
-              <ul className="space-y-4 mb-8">
+              <ul className="space-y-4 mb-8 flex-grow">
                 {plan.features.map((feature, featureIndex) => (
                   <li key={featureIndex} className="flex items-start">
                     <Check className="w-5 h-5 text-green-500 mt-0.5 mr-3 flex-shrink-0" />
@@ -119,7 +119,7 @@ export function Pricing() {
               </ul>
 
               <Button 
-                className={`w-full ${
+                className={`w-full mt-auto ${
                   plan.popular 
                     ? 'bg-primary-600 hover:bg-primary-700' 
                     : 'bg-secondary-600 hover:bg-secondary-700'
@@ -137,16 +137,8 @@ export function Pricing() {
           <h3 className="text-xl font-semibold mb-6">Métodos de pago aceptados</h3>
           <div className="flex flex-wrap justify-center items-center gap-6 text-muted-foreground">
             <div className="flex items-center gap-2">
-              <span className="text-lg">💳</span>
-              <span>Tarjetas de crédito/débito</span>
-            </div>
-            <div className="flex items-center gap-2">
               <span className="text-lg">💙</span>
               <span>PayPal</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-lg">🟡</span>
-              <span>Mercado Pago</span>
             </div>
           </div>
         </div>

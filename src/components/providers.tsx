@@ -5,7 +5,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import type { SupabaseClient } from '@supabase/auth-helpers-nextjs'
 import type { Database } from '@/types/supabase'
 
-type Theme = 'light' | 'dark' | 'system'
+type Theme = 'light' | 'dark'
 
 interface AppContextType {
   theme: Theme
@@ -16,7 +16,7 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined)
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('system')
+  const [theme, setTheme] = useState<Theme>('light')
   const [mounted, setMounted] = useState(false)
   const supabase = createClientComponentClient<Database>()
 
@@ -24,8 +24,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setMounted(true)
     const savedTheme = localStorage.getItem('theme') as Theme
-    if (savedTheme) {
+    if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
       setTheme(savedTheme)
+    } else {
+      // Si no hay tema guardado, usar el tema del sistema
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      setTheme(systemTheme)
     }
   }, [])
 
@@ -34,14 +38,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
     const root = window.document.documentElement
     root.classList.remove('light', 'dark')
-
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-      root.classList.add(systemTheme)
-    } else {
-      root.classList.add(theme)
-    }
-
+    root.classList.add(theme)
     localStorage.setItem('theme', theme)
   }, [theme, mounted])
 

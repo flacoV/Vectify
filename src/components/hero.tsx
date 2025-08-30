@@ -69,7 +69,7 @@ export function Hero() {
                 </div>
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-lg mb-2">Sube desde PC</h3>
+                <h3 className="font-semibold text-lg mb-2">Importa tu archivo</h3>
                 <p className="text-muted-foreground">
                   Arrastra y suelta archivos o selecciona desde tu dispositivo
                 </p>
@@ -84,7 +84,7 @@ export function Hero() {
               <div className="text-sm text-muted-foreground">Precisión OCR</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-primary-600">&lt;30s</div>
+              <div className="text-3xl font-bold text-primary-600">30s</div>
               <div className="text-sm text-muted-foreground">Tiempo de procesamiento</div>
             </div>
             <div className="text-center">
