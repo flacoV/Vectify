@@ -1,258 +1,152 @@
-# Vectify - Digitalización Inteligente con IA
+# Vectify - Digitalización con IA
 
-Vectify es un SaaS moderno que permite digitalizar manuscritos y dibujos mediante inteligencia artificial. Convierte escrituras en texto editable y transforma ilustraciones en vectores escalables.
+SaaS para digitalizar manuscritos y dibujos usando inteligencia artificial. Convierte escrituras en texto editable y transforma ilustraciones en vectores.
 
 ## 🚀 Características
 
-- **OCR Inteligente**: Reconocimiento de escritura manuscrita con 99.5% de precisión
-- **Vectorización Automática**: Conversión de dibujos a SVG y PNG transparente
-- **Captura Móvil**: Interfaz optimizada para móviles con cámara integrada
-- **Upload Desktop**: Drag & drop y file picker para PC
-- **Múltiples Formatos**: Soporte para JPG, PNG, WebP, PDF
-- **Dashboard Completo**: Historial, estadísticas y gestión de archivos
-- **Autenticación Segura**: Supabase Auth con múltiples proveedores
-- **Pagos Integrados**: PayPal, Mercado Pago y tarjetas de débito/crédito
-- **Tema Adaptativo**: Dark/Light mode automático
+- **OCR Inteligente**: Reconocimiento de escritura manuscrita con IA
+- **Vectorización Automática**: Conversión de dibujos a vectores escalables
+- **Múltiples Formatos**: JPG, PNG, PDF, TIFF → TXT, SVG, PNG transparente
+- **Acceso Móvil**: Captura con cámara y procesamiento en la nube
+- **Seguridad Total**: Encriptación SSL/TLS y cumplimiento GDPR
+- **Login con Google**: Autenticación OAuth integrada
+- **Pagos con PayPal**: Sistema de suscripciones simplificado
 
 ## 🛠️ Tecnologías
 
 - **Frontend**: Next.js 14, TypeScript, TailwindCSS
-- **Backend**: Next.js API Routes, Supabase
-- **Base de Datos**: PostgreSQL (Supabase)
-- **Autenticación**: Supabase Auth
-- **Pagos**: PayPal, Mercado Pago, Tarjetas de débito/crédito
+- **Backend**: Node.js con API Routes
+- **Base de Datos**: Supabase (PostgreSQL)
+- **Autenticación**: Supabase Auth + Google OAuth
+- **Pagos**: PayPal
 - **IA**: OpenAI Vision API
-- **Almacenamiento**: Supabase Storage
-- **UI**: Lucide React, Framer Motion
+- **Deploy**: Vercel/Netlify
 
 ## 📦 Instalación
 
-### Prerrequisitos
-
-- Node.js 18+ 
-- npm o yarn
-- Cuenta de Supabase
-- Cuenta de PayPal (opcional)
-- Cuenta de Mercado Pago (opcional)
-- API Key de OpenAI
-
-### 1. Clonar el repositorio
-
+1. **Clona el repositorio**
 ```bash
 git clone https://github.com/tu-usuario/vectify.git
 cd vectify
 ```
 
-### 2. Instalar dependencias
-
+2. **Instala dependencias**
 ```bash
 npm install
-# o
-yarn install
 ```
 
-### 3. Configurar variables de entorno
+3. **Configura variables de entorno**
+```bash
+cp env.example .env.local
+```
 
-Crea un archivo `.env.local` en la raíz del proyecto:
-
+Edita `.env.local` con tus credenciales:
 ```env
 # Supabase
-NEXT_PUBLIC_SUPABASE_URL=tu_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
 # OpenAI
-OPENAI_API_KEY=tu_openai_api_key
+OPENAI_API_KEY=your_openai_api_key
 
-# PayPal (opcional)
-PAYPAL_CLIENT_ID=tu_paypal_client_id
-PAYPAL_CLIENT_SECRET=tu_paypal_client_secret
-PAYPAL_WEBHOOK_ID=tu_paypal_webhook_id
-
-# Mercado Pago (opcional)
-MERCADO_PAGO_ACCESS_TOKEN=tu_mercadopago_access_token
-MERCADO_PAGO_PUBLIC_KEY=tu_mercadopago_public_key
-
-# Tarjetas de débito/crédito (opcional)
-CARD_PAYMENT_SECRET_KEY=tu_card_payment_secret_key
+# PayPal
+NEXT_PUBLIC_PAYPAL_CLIENT_ID=your_paypal_client_id
+PAYPAL_CLIENT_SECRET=your_paypal_client_secret
+PAYPAL_WEBHOOK_ID=your_paypal_webhook_id
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-### 4. Configurar Supabase
-
-1. Crea un proyecto en [Supabase](https://supabase.com)
-2. Ejecuta las migraciones SQL en el SQL Editor:
-
-```sql
--- Crear tabla de usuarios
-CREATE TABLE users (
-  id UUID REFERENCES auth.users(id) PRIMARY KEY,
-  email TEXT UNIQUE NOT NULL,
-  full_name TEXT,
-  avatar_url TEXT,
-  subscription_status TEXT DEFAULT 'free' CHECK (subscription_status IN ('free', 'pro', 'enterprise')),
-  subscription_id TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Crear tabla de digitalizaciones
-CREATE TABLE digitalizations (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-  original_filename TEXT NOT NULL,
-  original_url TEXT NOT NULL,
-  processed_url TEXT,
-  text_content TEXT,
-  vector_url TEXT,
-  png_url TEXT,
-  status TEXT DEFAULT 'processing' CHECK (status IN ('processing', 'completed', 'failed')),
-  type TEXT NOT NULL CHECK (type IN ('text', 'drawing', 'mixed')),
-  file_size INTEGER NOT NULL,
-  processing_time INTEGER,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Crear tabla de suscripciones
-CREATE TABLE subscriptions (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-  stripe_subscription_id TEXT UNIQUE NOT NULL,
-  stripe_customer_id TEXT NOT NULL,
-  status TEXT DEFAULT 'active' CHECK (status IN ('active', 'canceled', 'past_due', 'unpaid')),
-  plan TEXT NOT NULL CHECK (plan IN ('free', 'pro', 'enterprise')),
-  current_period_start TIMESTAMP WITH TIME ZONE NOT NULL,
-  current_period_end TIMESTAMP WITH TIME ZONE NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Habilitar RLS
-ALTER TABLE users ENABLE ROW LEVEL SECURITY;
-ALTER TABLE digitalizations ENABLE ROW LEVEL SECURITY;
-ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
-
--- Políticas RLS
-CREATE POLICY "Users can view own profile" ON users FOR SELECT USING (auth.uid() = id);
-CREATE POLICY "Users can update own profile" ON users FOR UPDATE USING (auth.uid() = id);
-
-CREATE POLICY "Users can view own digitalizations" ON digitalizations FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY "Users can insert own digitalizations" ON digitalizations FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY "Users can update own digitalizations" ON digitalizations FOR UPDATE USING (auth.uid() = user_id);
-CREATE POLICY "Users can delete own digitalizations" ON digitalizations FOR DELETE USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can view own subscriptions" ON subscriptions FOR SELECT USING (auth.uid() = user_id);
-```
-
-3. Configura el almacenamiento en Supabase:
-   - Ve a Storage en el dashboard
-   - Crea buckets: `uploads`, `processed`, `vectors`
-
-### 5. Ejecutar el proyecto
-
+4. **Ejecuta en desarrollo**
 ```bash
 npm run dev
-# o
-yarn dev
 ```
 
-Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
-
-## 🏗️ Estructura del Proyecto
-
-```
-src/
-├── app/                    # App Router de Next.js 14
-│   ├── auth/              # Páginas de autenticación
-│   ├── dashboard/         # Dashboard principal
-│   ├── globals.css        # Estilos globales
-│   ├── layout.tsx         # Layout principal
-│   └── page.tsx           # Página de inicio
-├── components/            # Componentes React
-│   ├── dashboard/         # Componentes del dashboard
-│   ├── ui/               # Componentes de UI base
-│   ├── footer.tsx        # Footer
-│   ├── header.tsx        # Header principal
-│   ├── hero.tsx          # Sección hero
-│   ├── features.tsx      # Características
-│   ├── pricing.tsx       # Planes de precios
-│   └── providers.tsx     # Providers de contexto
-├── lib/                  # Utilidades y configuraciones
-│   └── utils.ts          # Funciones utilitarias
-├── types/                # Tipos TypeScript
-│   └── supabase.ts       # Tipos de Supabase
-└── hooks/                # Hooks personalizados
-```
-
-## 🔧 Configuración Adicional
-
-### Configurar PayPal (Opcional)
-
-1. Crea una cuenta en [PayPal Developer](https://developer.paypal.com)
-2. Obtén las claves API desde el dashboard
-3. Configura los webhooks para manejar eventos de suscripción
-
-### Configurar Mercado Pago (Opcional)
-
-1. Crea una cuenta en [Mercado Pago](https://www.mercadopago.com)
-2. Obtén las claves API desde el dashboard
-3. Configura las notificaciones para manejar eventos de pago
-
-### Configurar OpenAI
-
-1. Crea una cuenta en [OpenAI](https://openai.com)
-2. Genera una API key
-3. Configura los límites de uso según tus necesidades
-
-## 🚀 Despliegue
+## 🚀 Deploy
 
 ### Vercel (Recomendado)
 
-1. Conecta tu repositorio a Vercel
-2. Configura las variables de entorno
-3. Despliega automáticamente
+1. **Conecta tu repositorio a Vercel**
+2. **Configura las variables de entorno** en el dashboard de Vercel
+3. **Deploy automático** en cada push
 
-### Otros proveedores
+### Netlify
 
-El proyecto es compatible con cualquier proveedor que soporte Next.js:
-- Netlify
-- Railway
-- DigitalOcean App Platform
-- AWS Amplify
+1. **Conecta tu repositorio a Netlify**
+2. **Configuración de build**:
+   - Build command: `npm run build`
+   - Publish directory: `.next`
+3. **Configura las variables de entorno** en el dashboard
 
-## 📱 Funcionalidades Principales
+### Otras plataformas
 
-### Digitalización de Texto
-- OCR avanzado para escritura manuscrita
-- Soporte para múltiples idiomas
-- Exportación en formato TXT editable
+El proyecto incluye configuraciones para:
+- `vercel.json` - Configuración para Vercel
+- `netlify.toml` - Configuración para Netlify
+- `next.config.js` - Configuración optimizada para producción
 
-### Vectorización de Dibujos
-- Conversión automática a SVG
-- Generación de PNG transparente
-- Optimización de vectores
+## 🔧 Configuración
 
-### Gestión de Archivos
-- Historial completo de digitalizaciones
-- Descarga de resultados
-- Eliminación segura de archivos
+### Supabase
 
-### Sistema de Suscripciones
-- Plan gratuito con límites
-- Planes Pro y Enterprise
-- Integración con PayPal, Mercado Pago y tarjetas
+1. Crea un proyecto en [Supabase](https://supabase.com)
+2. Habilita Google OAuth en Authentication > Providers
+3. Configura las variables de entorno
+
+### PayPal
+
+1. Crea una cuenta en [PayPal Developer](https://developer.paypal.com)
+2. Configura las credenciales de OAuth
+3. Configura el webhook en `/api/webhooks/paypal`
+
+### OpenAI
+
+1. Obtén tu API key en [OpenAI](https://platform.openai.com)
+2. Configura la variable `OPENAI_API_KEY`
+
+## 📁 Estructura del Proyecto
+
+```
+src/
+├── app/                    # App Router (Next.js 14)
+│   ├── auth/              # Páginas de autenticación
+│   ├── dashboard/         # Dashboard principal
+│   ├── api/               # API Routes
+│   └── globals.css        # Estilos globales
+├── components/            # Componentes React
+│   ├── ui/               # Componentes base
+│   ├── dashboard/        # Componentes del dashboard
+│   └── payment/          # Componentes de pago
+├── lib/                  # Utilidades y configuraciones
+└── types/                # Tipos TypeScript
+```
+
+## 🎯 Scripts Disponibles
+
+```bash
+npm run dev          # Desarrollo local
+npm run build        # Build de producción
+npm run start        # Servidor de producción
+npm run lint         # Linting
+npm run type-check   # Verificación de tipos
+```
 
 ## 🔒 Seguridad
 
-- Autenticación con Supabase Auth
-- Row Level Security (RLS) en PostgreSQL
-- Validación de archivos en frontend y backend
-- Encriptación de datos sensibles
-- Límites de tamaño de archivo
-- Sanitización de inputs
+- Encriptación SSL/TLS
+- Autenticación OAuth segura
+- Validación de inputs
+- Headers de seguridad configurados
+- Cumplimiento GDPR
+
+## 📱 Responsive
+
+- Diseño mobile-first
+- Componentes adaptativos
+- Navegación optimizada para móvil
+- Captura de cámara integrada
 
 ## 🤝 Contribuir
 
@@ -264,19 +158,22 @@ El proyecto es compatible con cualquier proveedor que soporte Next.js:
 
 ## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+Este proyecto está bajo la Licencia MIT. Ver `LICENSE` para más detalles.
 
 ## 🆘 Soporte
 
-- 📧 Email: hello@vectify.com
-- 📖 Documentación: [docs.vectify.com](https://docs.vectify.com)
-- 🐛 Issues: [GitHub Issues](https://github.com/tu-usuario/vectify/issues)
+Si tienes problemas con el deploy:
 
-## 🙏 Agradecimientos
+1. **Verifica las variables de entorno** están configuradas correctamente
+2. **Revisa los logs de build** en tu plataforma de deploy
+3. **Asegúrate de que Node.js 18+** esté configurado
+4. **Verifica que el repositorio** esté conectado correctamente
 
-- [Next.js](https://nextjs.org) por el framework
-- [Supabase](https://supabase.com) por la infraestructura
-- [TailwindCSS](https://tailwindcss.com) por los estilos
-- [OpenAI](https://openai.com) por la IA
-- [PayPal](https://paypal.com) por los pagos
-- [Mercado Pago](https://mercadopago.com) por los pagos
+## 🌟 Características Destacadas
+
+- **Interfaz moderna** con dark/light mode
+- **Navegación fluida** entre páginas
+- **Componentes reutilizables** y bien estructurados
+- **Optimización de rendimiento** con Next.js 14
+- **SEO optimizado** con metadatos dinámicos
+- **Accesibilidad** siguiendo estándares WCAG

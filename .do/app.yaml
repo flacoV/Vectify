@@ -1,0 +1,17 @@
+name: vectify
+services:
+  - name: web
+    source_dir: /
+    github:
+      repo: your-username/vectify
+      branch: main
+    run_command: npm start
+    build_command: npm run build
+    environment_slug: node-js
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_APP_URL
+        value: https://your-app-name.ondigitalocean.app
