@@ -55,7 +55,7 @@ export function SetupAlert() {
                 Configuración de Supabase Requerida
               </h3>
               <div className="text-sm text-red-700 dark:text-red-300 space-y-1">
-                {setupStatus.issues.map((issue, index) => (
+                {setupStatus.issues.map((issue: string, index: number) => (
                   <p key={index}>• {issue}</p>
                 ))}
               </div>
@@ -85,7 +85,7 @@ export function SetupAlert() {
                 Advertencias de Configuración
               </h3>
               <div className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
-                {setupStatus.warnings.map((warning, index) => (
+                {setupStatus.warnings.map((warning: string, index: number) => (
                   <p key={index}>• {warning}</p>
                 ))}
               </div>
