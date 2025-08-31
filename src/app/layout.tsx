@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { Providers } from '@/components/providers'
+import { AppProvider } from '@/components/providers'
 import { Toaster } from 'react-hot-toast'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={inter.className}>
-        <Providers>
+        <AppProvider>
           {children}
           <Toaster 
             position="top-right"
@@ -44,7 +44,7 @@ export default function RootLayout({
               },
             }}
           />
-        </Providers>
+        </AppProvider>
       </body>
     </html>
   )

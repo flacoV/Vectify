@@ -1,16 +1,31 @@
-# Vectify - Digitalización con IA
+# Vectify - Digitalización con IA 🚀
 
 SaaS para digitalizar manuscritos y dibujos usando inteligencia artificial. Convierte escrituras en texto editable y transforma ilustraciones en vectores.
 
-## 🚀 Características
+## ✨ Funcionalidades Principales
 
-- **OCR Inteligente**: Reconocimiento de escritura manuscrita con IA
-- **Vectorización Automática**: Conversión de dibujos a vectores escalables
-- **Múltiples Formatos**: JPG, PNG, PDF, TIFF → TXT, SVG, PNG transparente
-- **Acceso Móvil**: Captura con cámara y procesamiento en la nube
-- **Seguridad Total**: Encriptación SSL/TLS y cumplimiento GDPR
-- **Login con Google**: Autenticación OAuth integrada
-- **Pagos con PayPal**: Sistema de suscripciones simplificado
+- **OCR Inteligente**: Extracción de texto de imágenes usando OpenAI Vision API
+- **Vectorización de Dibujos**: Conversión de dibujos a formatos vectoriales
+- **Dashboard en Tiempo Real**: Estadísticas y historial de digitalizaciones
+- **Gestión de Usuario**: Perfil editable, configuración y exportación de datos
+- **Almacenamiento Seguro**: Integración con Supabase Storage
+- **Autenticación**: Sistema de autenticación completo con Supabase Auth
+
+## 🎯 Estado del Proyecto
+
+### ✅ Completado
+- Dashboard funcional con datos reales
+- Procesamiento de archivos con OpenAI
+- Sistema de autenticación
+- Gestión de perfil y configuración
+- Historial de digitalizaciones
+- Estadísticas en tiempo real
+
+### 🚧 En Desarrollo
+- Vectorización avanzada de dibujos
+- Sistema de suscripciones
+- Integración con PayPal/Stripe
+- Notificaciones por email
 
 ## 🛠️ Tecnologías
 
@@ -22,7 +37,41 @@ SaaS para digitalizar manuscritos y dibujos usando inteligencia artificial. Conv
 - **IA**: OpenAI Vision API
 - **Deploy**: Vercel/Netlify
 
-## 📦 Instalación
+## 🚀 Inicio Rápido
+
+1. **Clona el repositorio**
+   ```bash
+   git clone <repository-url>
+   cd Vectify
+   ```
+
+2. **Instala dependencias**
+   ```bash
+   npm install
+   ```
+
+3. **Configura las variables de entorno**
+   ```bash
+   cp env.example .env.local
+   # Edita .env.local con tus credenciales
+   ```
+
+4. **Configura Supabase**
+   - Ejecuta el script `scripts/supabase-setup.sql` en tu proyecto Supabase
+   - Crea los buckets de storage necesarios
+
+5. **Ejecuta en desarrollo**
+   ```bash
+   npm run dev
+   ```
+
+## 📚 Documentación
+
+- **[QUICK_SETUP.md](./QUICK_SETUP.md)** - Configuración rápida para solucionar errores
+- **[SETUP.md](./SETUP.md)** - Instrucciones detalladas de configuración
+- **[HUGGINGFACE_SETUP.md](./HUGGINGFACE_SETUP.md)** - Configuración de IA gratuita (30,000 requests/mes)
+
+## 📦 Instalación Detallada
 
 1. **Clona el repositorio**
 ```bash

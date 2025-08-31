@@ -15,7 +15,7 @@ export function DashboardHeader() {
   }
 
   const getThemeIcon = () => {
-    return theme === 'light' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />
+    return theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />
   }
 
   const handleSignOut = async () => {

@@ -6,11 +6,16 @@ import { Button } from '@/components/ui/button'
 import { Camera, Upload, FileText, Image, Loader2 } from 'lucide-react'
 import { CameraCapture } from './camera-capture'
 import { toast } from 'react-hot-toast'
+import { useDigitalization } from '@/lib/hooks/useDigitalization'
+import { useDashboardStats } from '@/lib/hooks/useDashboardStats'
+import { useApp } from '@/components/providers'
 
 type DigitalizationType = 'text' | 'drawing' | 'mixed'
 
 export function DigitalizationArea() {
-  const [isProcessing, setIsProcessing] = useState(false)
+  const { isProcessing, processFile } = useDigitalization()
+  const { refreshStats } = useDashboardStats()
+  const { refreshHistory } = useApp()
   const [showCamera, setShowCamera] = useState(false)
   const [selectedType, setSelectedType] = useState<DigitalizationType>('text')
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
@@ -52,16 +57,15 @@ export function DigitalizationArea() {
       return
     }
 
-    setIsProcessing(true)
     try {
-      // Aquí iría la lógica de procesamiento con la API
-      await new Promise(resolve => setTimeout(resolve, 3000)) // Simulación
-      toast.success('Digitalización completada exitosamente')
-      setSelectedFile(null)
+      const result = await processFile(selectedFile, selectedType)
+      if (result) {
+        setSelectedFile(null)
+        refreshStats() // Actualizar estadísticas después del procesamiento
+        refreshHistory() // Actualizar historial después del procesamiento
+      }
     } catch (error) {
-      toast.error('Error al procesar el archivo')
-    } finally {
-      setIsProcessing(false)
+      console.error('Error en handleProcess:', error)
     }
   }
 

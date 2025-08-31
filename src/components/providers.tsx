@@ -1,8 +1,7 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import type { SupabaseClient } from '@supabase/auth-helpers-nextjs'
 import type { Database } from '@/types/supabase'
 
 type Theme = 'light' | 'dark'
@@ -10,15 +9,18 @@ type Theme = 'light' | 'dark'
 interface AppContextType {
   theme: Theme
   setTheme: (theme: Theme) => void
-  supabase: SupabaseClient<Database>
+  supabase: ReturnType<typeof createClientComponentClient<Database>>
+  refreshHistory: () => void
+  historyVersion: number
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined)
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function AppProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('light')
   const [mounted, setMounted] = useState(false)
   const supabase = createClientComponentClient<Database>()
+  const [historyVersion, setHistoryVersion] = useState(0)
 
   // Manejo del tema
   useEffect(() => {
@@ -46,12 +48,22 @@ export function Providers({ children }: { children: React.ReactNode }) {
     setTheme(newTheme)
   }
 
+  const refreshHistory = () => {
+    setHistoryVersion(prev => prev + 1)
+  }
+
   if (!mounted) {
     return <div className="min-h-screen bg-background" />
   }
 
   return (
-    <AppContext.Provider value={{ theme, setTheme: handleThemeChange, supabase }}>
+    <AppContext.Provider value={{ 
+      theme, 
+      setTheme: handleThemeChange, 
+      supabase, 
+      refreshHistory, 
+      historyVersion 
+    }}>
       {children}
     </AppContext.Provider>
   )
@@ -60,7 +72,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 export function useApp() {
   const context = useContext(AppContext)
   if (context === undefined) {
-    throw new Error('useApp must be used within a Providers')
+    throw new Error('useApp must be used within an AppProvider')
   }
   return context
 }
